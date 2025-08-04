@@ -1,3 +1,38 @@
+// Mobile Menu Toggle Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const hamburger = document.querySelector('.hamburger');
+    const mobileNavOverlay = document.querySelector('.mobile-nav-overlay');
+    const body = document.body;
+
+    if (mobileMenuToggle && hamburger && mobileNavOverlay) {
+        mobileMenuToggle.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            mobileNavOverlay.classList.toggle('active');
+            body.style.overflow = mobileNavOverlay.classList.contains('active') ? 'hidden' : '';
+        });
+
+        // Close menu when clicking on overlay background
+        mobileNavOverlay.addEventListener('click', function(e) {
+            if (e.target === mobileNavOverlay) {
+                hamburger.classList.remove('active');
+                mobileNavOverlay.classList.remove('active');
+                body.style.overflow = '';
+            }
+        });
+
+        // Close menu when clicking on mobile nav links
+        const mobileNavLinks = mobileNavOverlay.querySelectorAll('a');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                mobileNavOverlay.classList.remove('active');
+                body.style.overflow = '';
+            });
+        });
+    }
+});
+
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -89,6 +124,41 @@ function showNotification(message) {
         }, 300);
     }, 3000);
 }
+
+// Custom notification for demo site (for .card-btn, .deal-btn, .article-btn)
+function showCustomNotif() {
+    // Remove existing notif if present
+    const oldNotif = document.querySelector('.custom-notif');
+    if (oldNotif) oldNotif.remove();
+
+    const notif = document.createElement('div');
+    notif.className = 'custom-notif';
+    notif.textContent = 'این سایت دمو است !';
+    // Progress bar
+    const progress = document.createElement('div');
+    progress.className = 'custom-notif-progress';
+    notif.appendChild(progress);
+    document.body.appendChild(notif);
+    // Animate in
+    setTimeout(() => {
+        notif.classList.add('show');
+        progress.style.transition = 'transform 2.2s linear';
+        progress.style.transform = 'scaleX(0)';
+    }, 10);
+    // Animate out after 2.2s
+    setTimeout(() => {
+        notif.classList.remove('show');
+        notif.classList.add('hide');
+        setTimeout(() => {
+            notif.remove();
+        }, 700);
+    }, 2200);
+}
+document.body.addEventListener('click', function(e) {
+    if (e.target.closest('.card-btn, .deal-btn, .article-btn, .social-links a')) {
+        showCustomNotif();
+    }
+});
 
 // Header scroll effect
 window.addEventListener('scroll', () => {
